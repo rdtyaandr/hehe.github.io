@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wkwkwkk</title>
+    <style>
+        body {
+            background-color: black; /* Latar belakang hitam */
+            color: white;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh; /* Menambahkan tinggi penuh */
+            margin: 0; /* Menghilangkan margin default */
+            display: flex; /* Menggunakan flexbox untuk penataan */
+            flex-direction: column; /* Mengatur arah kolom */
+            justify-content: center; /* Menyusun konten di tengah */
+            overflow: hidden; /* Menghindari scroll saat modal muncul */
+            transition: background-color 1.5s; /* Transisi untuk perubahan warna latar belakang */
+        }
+        #background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1; /* Pastikan berada di belakang konten lainnya */
+        }
+        #modal {
+            display: none; /* Sembunyikan modal secara default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.5s ease-out, float 2s infinite; /* Animasi modern dengan efek melayang */
+        }
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -60%); /* Mulai dari atas */
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%); /* Posisi akhir */
+                opacity: 1;
+            }
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translate(-50%, -50%); /* Posisi tengah */
+            }
+            50% {
+                transform: translate(-50%, -55%); /* Sedikit naik */
+            }
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+        }
+        input {
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            width: 80%; /* Lebar input */
+            font-size: 16px;
+        }
+        button {
+            margin: 10px; /* Menambahkan jarak antar tombol */
+            padding: 12px 25px;
+            border: none;
+            border-radius: 20px; /* Membuat sudut tombol lebih bulat */
+            cursor: pointer;
+            background: linear-gradient(135deg, #00aaff, #0077ff); /* Warna tombol dengan gradasi laut */
+            color: white;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.2s; /* Transisi warna dan transformasi */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Bayangan tombol */
+        }
+        button:hover {
+            background: linear-gradient(135deg, #0077ff, #00aaff); /* Warna saat hover */
+            transform: scale(1.05); /* Efek zoom saat hover */
+        }
+        .typing-animation {
+            display: inline-block;
+            border-right: 2px solid white; /* Kursor */
+            white-space: nowrap; /* Mencegah teks terputus */
+            overflow: hidden; /* Menyembunyikan teks yang tidak terlihat */
+            animation: typing 3s steps(30, end), blink-caret 0.75s step-end infinite; /* Animasi mengetik */
+            font-size: 28px; /* Ukuran font lebih besar */
+            font-weight: bold; /* Ketebalan font lebih besar */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Tambahkan shadow hitam pada teks */
+        }
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+        @keyframes blink-caret {
+            from, to {
+                border-color: transparent;
+            }
+            50% {
+                border-color: white;
+            }
+        }
+        .emoji {
+            position: fixed;
+            width: 100px; /* Ukuran awal emoji */
+            left: 50%; /* Posisikan di tengah */
+            transform: translateX(-50%); /* Menggeser ke kiri setengah lebar emoji */
+            display: none; /* Sembunyikan emoji secara default */
+            animation: scaleUp 1.5s forwards; /* Animasi dari kecil ke besar */
+        }
+        @keyframes scaleUp {
+            0% {
+                transform: translateX(-50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) scale(10);
+                opacity: 0; /* Menghilang */
+            }
+        }
+        .falling-gif {
+            position: fixed;
+            top: 30%; /* Mulai dari tengah layar */
+            left: 100%; /* Mulai dari sisi kanan layar */
+            transform: translateY(-50%); /* Posisikan di tengah vertikal */
+            width: 80px; /* Ukuran gif lebih kecil */
+            animation: slideLeft 3s forwards; /* Animasi bergerak ke kiri lebih lama */
+        }
+        @keyframes slideLeft {
+            to {
+                left: -130px; /* Bergerak keluar dari sisi kiri layar */
+                opacity: 0; /* Menghilang */
+            }
+        }
+        .lumut-gif {
+            position: fixed;
+            top: 50%; /* Posisikan di tengah vertikal */
+            left: 50%; /* Posisikan di tengah horizontal */
+            transform: translate(-50%, -50%) scale(0); /* Mulai dari scale 0 */
+            animation: scaleIn 2s forwards; /* Animasi scale selama 5 detik */
+        }
+        @keyframes scaleIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0); /* Mulai dari scale 0 */
+                opacity: 1; /* Tampilkan */
+            }
+            80% {
+                transform: translate(-50%, -50%) scale(1); /* Akhir scale 1 */
+                opacity: 1; /* Tampilkan */
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(10); /* Akhir scale 1 */
+                opacity: 0; /* Menghilang */
+            }
+        }
+        #flowerVideo {
+            position: fixed;
+            top: 70%; /* Posisikan di tengah vertikal */
+            left: 56%; /* Posisikan di tengah horizontal */
+            width: 150vw; /* Lebar video penuh */
+            height: 100vh; /* Tinggi video penuh */
+            transform: translate(-50%, -50%); /* Menggeser ke tengah */
+            display: none; /* Sembunyikan video secara default */
+            opacity: 0; /* Mulai dengan opacity 0 */
+            animation: fadeIn 1s forwards; /* Animasi fade in saat video muncul */
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1; /* Akhir opacity 1 */
+            }
+        }
+        #ondeImage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0; /* Mulai dengan opacity 0 */
+            transition: opacity 1s; /* Transisi untuk efek muncul */
+            display: none; /* Sembunyikan gambar secara default */
+        }
+    </style>
+</head>
+<body>
+    <div id="background" style="background-image: url('bg.jpg');"></div> <!-- Tambahkan div untuk background -->
+    <div id="modal">
+        <h2>Syapaa namanyaa?</h2>
+        <input type="text" id="nameInput" placeholder="ur name">
+        <div>
+            <button id="submitBtn">Kirim</button>
+        </div>
+    </div>
+    <div id="greeting"></div>
+    <img id="emoji" class="emoji" src="emojisus.png" alt="Emoji" />
+    <video id="flowerVideo" src="flower.mp4" autoplay></video> <!-- Video bunga -->
+    <img id="ondeImage" src="onde.jpeg" alt="Onde" /> <!-- Gambar onde -->
+
+    <script>
+        window.onload = function() {
+            const modal = document.getElementById('modal');
+            const greeting = document.getElementById('greeting');
+            const emoji = document.getElementById('emoji');
+            const flowerVideo = document.getElementById('flowerVideo');
+            const ondeImage = document.getElementById('ondeImage'); // Ambil elemen gambar onde
+            let callZoroCount = 0; // Menghitung jumlah klik tombol Call Zoro
+            modal.style.display = 'block'; // Tampilkan modal
+
+            document.getElementById('submitBtn').onclick = function() {
+                const name = document.getElementById('nameInput').value;
+                if (name) {
+                    greeting.innerHTML = `<span class="typing-animation">Hewooo ${name} how are u todayyy??</span>`;
+                    modal.style.display = 'none'; // Sembunyikan modal
+                    
+                    // Menampilkan tombol setelah animasi selesai
+                    setTimeout(() => {
+                        const yesButton = document.createElement('button');
+                        yesButton.innerText = 'IM PAIN';
+                        yesButton.onclick = function() {
+                            greeting.innerHTML = `<span class="typing-animation">are you suree????</span>`; // Tampilkan teks baru dengan animasi
+                            emoji.style.display = 'block'; // Tampilkan emoji
+                            setTimeout(() => {
+                                emoji.style.display = 'none'; // Sembunyikan emoji setelah 2.5 detik
+                            }, 1500);
+                            
+                            // Menambahkan 3 tombol di bawah teks setelah animasi selesai
+                            setTimeout(() => {
+                                const buttonContainer = document.createElement('div');
+                                buttonContainer.style.display = 'flex';
+                                buttonContainer.style.justifyContent = 'center'; // Mengatur tombol agar berada di tengah
+                                
+                                const button1 = document.createElement('button');
+                                button1.innerText = 'Yeahhh';
+                                button1.onclick = function() {
+                                    // Tampilkan teks baru dengan animasi
+                                    greeting.innerHTML = `<span class="typing-animation">do u want to see a flower?</span>`;
+                                    
+                                    // Menunggu hingga animasi selesai sebelum menampilkan tombol OKE
+                                    setTimeout(() => {
+                                        const okButton = document.createElement('button');
+                                        okButton.innerText = 'BWOLEHHH';
+                                        okButton.style.display = 'block'; // Menampilkan tombol OKE di bawah teks
+                                        okButton.style.margin = '10px auto'; // Menambahkan margin untuk menempatkan di tengah
+                                        okButton.onclick = function() {
+                                            // Menghapus semua yang terlihat di layar
+                                            document.body.style.backgroundColor = 'black'; // Mengubah latar belakang menjadi hitam
+
+                                            // Menghapus gambar latar belakang
+                                            const background = document.getElementById('background');
+                                            background.style.backgroundImage = 'none'; // Menghapus gambar latar belakang
+
+                                            flowerVideo.style.display = 'block'; // Tampilkan video bunga
+                                            flowerVideo.currentTime = 0; // Set waktu video ke 0 detik
+
+                                            setTimeout(() => { // Menambahkan delay untuk transisi
+                                                greeting.innerHTML = ''; // Menghapus semua konten di greeting
+                                                modal.style.display = 'none'; // Menyembunyikan modal
+                                                emoji.style.display = 'none'; // Menyembunyikan emoji
+                                            }, 0); // Waktu delay sebelum menghapus konten
+                                        };
+                                        greeting.appendChild(okButton); // Menambahkan tombol OKE ke greeting
+                                    }, 3000); // Waktu sesuai dengan durasi animasi mengetik
+                                };
+                                
+                                const button2 = document.createElement('button');
+                                button2.innerText = 'Chat admin';
+                                const emojiImg = document.createElement('img');
+                                emojiImg.src = 'emojiok.png'; // Gambar emoji
+                                emojiImg.style.width = '30px'; // Ukuran gambar emoji
+                                emojiImg.style.display = 'none'; // Sembunyikan gambar emoji awalnya
+                                button2.onclick = function() {
+                                    emojiImg.style.display = 'inline'; // Tampilkan gambar emoji saat tombol dipencet
+                                    window.open('https://wa.me/62881036671859?text=GG%20BANG%20MESSIIII SIUUU', '_blank'); // Membuka chat WhatsApp
+                                };
+                                button2.appendChild(emojiImg); // Menambahkan gambar emoji ke dalam tombol
+                                button2.style.position = 'relative'; // Mengatur posisi tombol
+                                button2.style.display = 'flex'; // Menggunakan flexbox untuk tombol
+                                button2.style.alignItems = 'center'; // Menyusun item di tengah secara vertikal
+                                button2.style.justifyContent = 'center'; // Menyusun item di tengah secara horizontal
+                                const button3 = document.createElement('button');
+                                button3.innerText = 'Call zoro';
+                                button3.onclick = function() {
+                                    callZoroCount++; // Increment count setiap kali tombol dipencet
+                                    const gif = document.createElement('img');
+                                    gif.src = 'jororun.gif'; // Sumber gif
+                                    gif.className = 'falling-gif'; // Tambahkan kelas untuk animasi
+                                    document.body.appendChild(gif); // Tambahkan gif ke body
+                                    
+                                    // Jika sudah dipencet 10 kali, tampilkan gif lumut
+                                    if (callZoroCount % 10 === 0) {
+                                        const lumutGif = document.createElement('img');
+                                        lumutGif.src = 'botak.jpg'; // Sumber gif lumut
+                                        lumutGif.className = 'lumut-gif'; // Tambahkan kelas untuk animasi
+                                        document.body.appendChild(lumutGif); // Tambahkan gif lumut ke body
+                                        setTimeout(() => {
+                                            lumutGif.remove(); // Menghapus gif lumut setelah 5 detik
+                                        }, 2000);
+                                    }
+                                };
+                                
+                                buttonContainer.appendChild(button1);
+                                buttonContainer.appendChild(button2);
+                                buttonContainer.appendChild(button3);
+                                greeting.appendChild(buttonContainer);
+                            }, 3000); // Menunggu hingga animasi selesai
+                        };
+                        const noButton = document.createElement('button');
+                        noButton.innerText = 'IM NO PAIN'; // Teks awal tanpa emoji
+                        noButton.onclick = function() {
+                            noButton.innerText = 'IM NO PAIN 😂'; // Menambahkan emoji ketawa
+                            const randomX = Math.random() * (window.innerWidth - 100); // Menghitung posisi acak X
+                            const randomY = Math.random() * (window.innerHeight - 100); // Menghitung posisi acak Y
+                            noButton.style.position = 'absolute'; // Mengatur posisi tombol menjadi absolute
+                            noButton.style.left = randomX + 'px'; // Mengatur posisi X
+                            noButton.style.top = randomY + 'px'; // Mengatur posisi Y
+                        };
+
+                        // Menambahkan tombol di bawah teks
+                        const buttonContainer = document.createElement('div');
+                        buttonContainer.style.display = 'flex';
+                        buttonContainer.style.justifyContent = 'center'; // Mengatur tombol agar berada di tengah
+                        buttonContainer.appendChild(yesButton);
+                        buttonContainer.appendChild(noButton);
+                        greeting.appendChild(buttonContainer);
+
+                        yesButton.style.display = 'inline'; // Tampilkan tombol Yes
+                        noButton.style.display = 'inline'; // Tampilkan tombol No
+                    }, 3000); // Waktu sesuai dengan durasi animasi mengetik
+
+                    // Munculkan gambar onde setelah video flower 5 detik berjalan
+                    flowerVideo.onplay = function() {
+                        setTimeout(() => {
+                            ondeImage.style.display = 'block'; // Tampilkan gambar
+                            ondeImage.style.opacity = 1; // Ubah opacity menjadi 1
+                        }, 6000); // 5 detik
+                    };
+                }
+            };
+        };
+    </script>
+</body>
+</html>
